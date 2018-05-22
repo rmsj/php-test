@@ -1,9 +1,9 @@
 <?php
 require_once('filebrowser.php');
 
-	/*
-	 * Add your filebrowser definition code here
-	 */
+/*
+ * Add your filebrowser definition code here
+*/
 ?>
 <!doctype html>
 <html lang="en">
