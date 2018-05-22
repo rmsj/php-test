@@ -8,3 +8,5 @@ directory but not above the defined root. It should also support passing an arra
 * Please take a fork of this repository if possible and commit to it, supplying the URL to your fork when complete.
 * If you are not able to take a fork, please download the source files and supply a ZIP archive of your code.
 
+* The test should take no longer than 2 hours to complete. Please stop once you have reached this point.
+
