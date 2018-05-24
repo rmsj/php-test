@@ -5,6 +5,6 @@ The file browser should support being able to click on files and also navigate i
 directory but not above the defined root. It should also support passing an array of file extensions to filter by.
 
 ## Delivery
-* Please take a fork of this repository and commit to it as much possible as you can, supplying the URL to your fork when complete.
+* Please take a fork of this repository and commit to it as much as possible, supplying the URL to your fork when complete.
 * The test should take no longer than 2 hours to complete. Please stop once you have reached this point.
 
