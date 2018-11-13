@@ -63,9 +63,9 @@ class FileBrowser implements __FileBrowser {
         $fileList = [];
         if (is_dir($this->currentPath)){
 
-            $fileList = scandir("rootFile/");
+            $files = scandir($this->currentPath);
 
-            foreach ($fileList as $file) {
+            foreach ($files as $file) {
                 if($file == "." || $file == ".."){
                     continue;
                 }
@@ -75,12 +75,13 @@ class FileBrowser implements __FileBrowser {
                         'file_name' => $file,
                         'directory' => true,
                         'extension' => '',
+                        'size' => $this->fileSize($file),
                         'path' => ltrim($this->currentPath . $file, $this->rootPath),
                     );
                 } else {
                     // filter on the fly
                     $ext = $this->fileExtension($file);
-                    if(count($this->extensionFilter)){
+                    if($this->extensionFilter){
                         if(!in_array($ext, $this->extensionFilter)){
                             continue;
                         }
@@ -89,6 +90,7 @@ class FileBrowser implements __FileBrowser {
                         'file_name' => $file,
                         'directory' => false,
                         'extension' => $ext,
+                        'size' => $this->fileSize($file),
                         'path' => ltrim($this->currentPath . $file, $this->rootPath),
                     ];
 
@@ -107,5 +109,10 @@ class FileBrowser implements __FileBrowser {
     private function fileExtension($fileName)
     {
         return pathinfo($this->currentPath . $fileName, PATHINFO_EXTENSION);
+    }
+
+    private function fileSize($fileName)
+    {
+        return filesize($this->currentPath . $fileName) . " bytes";
     }
 }
