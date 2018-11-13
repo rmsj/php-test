@@ -11,6 +11,23 @@ require_once('filebrowser.php');
   <title>File browser</title>
  </head>
  <body>
-  <!-- Output file list HTML here -->
+ <?php
+
+ $fileBrowser = new FileBrowser("rootFile/");
+ $fileBrowser->SetExtensionFilter(["txt", "html"]);
+ $files = $fileBrowser->Get();
+ print_r($files);
+
+
+/*
+ $dir = "rootFile/";
+ $files = [];
+ foreach (glob("{$dir}*.{txt,html}", GLOB_BRACE) as $filename) {
+     $files[] = "$filename size " . filesize($filename) . "<br/>";
+ }
+
+ print_r($files);*/
+
+ ?>
  </body>
 </html>
