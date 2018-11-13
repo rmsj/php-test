@@ -35,7 +35,7 @@ class FileBrowser implements __FileBrowser {
 
     public function SetRootPath($rootPath)
     {
-        $this->rootPath = $rootPath;
+        $this->rootPath = rtrim($rootPath, '/') . '/';
     }
 
     /**
@@ -44,8 +44,11 @@ class FileBrowser implements __FileBrowser {
     public function SetCurrentPath($currentPath)
     {
         // TODO: do not allow for current path above root folder
-
-        $this->currentPath = rtrim($currentPath, '/') . '/';
+        if ($this->rootPath == $currentPath) {
+            $this->currentPath = $this->rootPath;
+        } else {
+            $this->currentPath = $this->rootPath . rtrim($currentPath, '/') . '/';
+        }
     }
 
     /**
@@ -61,40 +64,37 @@ class FileBrowser implements __FileBrowser {
 
         // TODO: this is horrible - try to use glob or RecursiveIteratorIterator - no time
         $fileList = [];
-        if (is_dir($this->currentPath)){
+        $files = $this->scanFolder($this->currentPath);
 
-            $files = scandir($this->currentPath);
+        foreach ($files as $file) {
+            if($file == "." || $file == ".."){
+                continue;
+            }
 
-            foreach ($files as $file) {
-                if($file == "." || $file == ".."){
-                    continue;
-                }
-
-                if ($this->isDir($file)) {
-                    $fileList[] = array(
-                        'file_name' => $file,
-                        'directory' => true,
-                        'extension' => '',
-                        'size' => $this->fileSize($file),
-                        'path' => ltrim($this->currentPath . $file, $this->rootPath),
-                    );
-                } else {
-                    // filter on the fly
-                    $ext = $this->fileExtension($file);
-                    if($this->extensionFilter){
-                        if(!in_array($ext, $this->extensionFilter)){
-                            continue;
-                        }
+            if ($this->isDir($file)) {
+                $fileList[] = array(
+                    'file_name' => $file,
+                    'directory' => true,
+                    'extension' => '',
+                    'size' => $this->fileSize($file),
+                    'path' => ltrim($this->currentPath . $file, $this->rootPath),
+                );
+            } else {
+                // filter on the fly
+                $ext = $this->fileExtension($file);
+                if($this->extensionFilter){
+                    if(!in_array($ext, $this->extensionFilter)){
+                        continue;
                     }
-                    $fileList[] = [
-                        'file_name' => $file,
-                        'directory' => false,
-                        'extension' => $ext,
-                        'size' => $this->fileSize($file),
-                        'path' => ltrim($this->currentPath . $file, $this->rootPath),
-                    ];
-
                 }
+                $fileList[] = [
+                    'file_name' => $file,
+                    'directory' => false,
+                    'extension' => $ext,
+                    'size' => $this->fileSize($file),
+                    'path' => ltrim($this->currentPath . $file, $this->rootPath),
+                ];
+
             }
         }
 
@@ -114,5 +114,10 @@ class FileBrowser implements __FileBrowser {
     private function fileSize($fileName)
     {
         return filesize($this->currentPath . $fileName) . " bytes";
+    }
+
+    private function scanFolder()
+    {
+        return scandir($this->currentPath);
     }
 }

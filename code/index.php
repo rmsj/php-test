@@ -8,6 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // TODO: it is only accepting one filter for now
     $filter = $_POST['filter'];
     $fileBrowser->SetExtensionFilter([$filter]);
+} else {
+    if ($path = $_GET['path']) {
+        $fileBrowser->SetCurrentPath($path);
+    }
 }
 $files = $fileBrowser->Get();
 ?>
@@ -55,7 +59,11 @@ $files = $fileBrowser->Get();
          <?php else:
             foreach ($files as $file): ?>
                 <tr>
-                    <td scope="row"><?php echo $file["file_name"]; ?></td>
+                    <td scope="row">
+                        <?php if ($file['directory']): ?><a href="?path=<?=$file["file_name"]?>"><?php endif; ?>
+                        <?php echo $file["file_name"]; ?>
+                        <?php if ($file['directory']): ?></a><?php endif; ?>
+                    </td>
                     <td><?php echo $file["extension"]; ?></td>
                     <td><?php echo $file["size"]; ?></td>
                 </tr>
