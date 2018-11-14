@@ -6,8 +6,8 @@ $fileBrowser = new FileBrowser("rootFiles/");
 // ugh
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // TODO: it is only accepting one filter for now
-    $filter = empty($_POST['filter']) ? [] : explode(",", $_POST['filter']);
-    $fileBrowser->SetExtensionFilter($filter);
+    $filter = empty($_POST['filter']) ? "" : $_POST['filter'];
+    $fileBrowser->SetExtensionFilter(explode(",", $filter));
 }
 if ($path = $_GET['path']) {
     $fileBrowser->SetCurrentPath($path);
