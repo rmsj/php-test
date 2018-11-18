@@ -1,13 +1,14 @@
 <?php
 require_once('filebrowser.php');
 
-$filter = "";
+$filter = [];
 $fileBrowser = new FileBrowser("rootFiles/");
+
 // ugh
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // TODO: it is only accepting one filter for now
-    $filter = empty($_POST['filter']) ? "" : $_POST['filter'];
-    $fileBrowser->SetExtensionFilter(explode(",", $filter));
+    $filter = empty($_POST['filter']) ? [] : $_POST['filter'];
+    $fileBrowser->SetExtensionFilter($filter);
 }
 if ($path = $_GET['path']) {
     $fileBrowser->SetCurrentPath($path);
@@ -19,8 +20,13 @@ $files = $fileBrowser->Get();
  <head>
      <meta charset="utf-8">
      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+     <link rel="stylesheet" href="assets/css/index.css" >
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+     <script src="assets/js/index.js"></script>
 
      <title>File browser</title>
  </head>
@@ -34,15 +40,14 @@ $files = $fileBrowser->Get();
                 <hr/>
 
                 <form class="form-inline float-left" method="post">
-                    <div class="form-group mb-2">
+                    <div class="form-group mb-2 filter-container">
                         <!-- This could be defined from the list of current types on the current folder - via ajax -->
                         <!-- And also using some nice multiple select -->
                         <label class="pr-2"> Filter by file type: </label>
-                        <select class="form-control form-control-sm" name="filter">
-                            <option value="" <?php echo $filter == '' ? 'selected' : '' ?>>All</option>
-                            <option value="txt" <?php echo $filter == 'txt' ? 'selected' : '' ?>>TXT Files</option>
-                            <option value="html" <?php echo $filter == 'html' ? 'selected' : '' ?>>HTML Files</option>
-                            <option value="jpeg,jpg,png" <?php echo $filter == 'jpeg,jpg,png' ? 'selected' : '' ?>>Image Files</option>
+                        <select class="form-control form-control-sm" name="filter[]" id="fileFilter" multiple="multiple">
+                            <option value="txt" <?php echo in_array('txt', $filter) ? 'selected' : '' ?>>TXT Files</option>
+                            <option value="html" <?php echo in_array('html', $filter) ? 'selected' : '' ?>>HTML Files</option>
+                            <option value="jpeg,jpg,png" <?php echo in_array('jpeg,jpg,png', $filter) ? 'selected' : '' ?>>Image Files</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-success btn-sm ml-2 mb-2"> Filter </button>

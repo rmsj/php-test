@@ -56,7 +56,11 @@ class FileBrowser implements __FileBrowser {
      */
     public function SetExtensionFilter(array $extensionFilter)
     {
-        $this->extensionFilter = $extensionFilter;
+        // make sure we separate image extensions into their own array element
+        $extensionFilter = implode(",", $extensionFilter);
+        if ($extensionFilter) {
+            $this->extensionFilter = explode(",", $extensionFilter);
+        }
     }
 
     /**
@@ -101,7 +105,7 @@ class FileBrowser implements __FileBrowser {
             } else {
                 // filter on the fly
                 $ext = $this->fileExtension($file);
-                if($this->extensionFilter){
+                if(!empty($this->extensionFilter)){
                     if(!in_array($ext, $this->extensionFilter)){
                         continue;
                     }
